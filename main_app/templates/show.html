@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h2> Name: {{ cat.name}}</h2>
+    <p> Age: {{ cat.age }}</p>
+    <p> Breed: {{ cat.breed }}</p>
+    <p> Description: {{ cat.description }}</p>
+{% endblock %}
