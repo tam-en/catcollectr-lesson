@@ -86,7 +86,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:cat_id>/', views.show, name='show'),
     path('post_url/', views.post_cat, name='post_cat'),
-    path('user/<char:username>/', views.profile, name=""), # this line is new
+    path('user/<char:username>/', views.profile, name='profile'), # this line is new
 ]
 ...
 ```
@@ -104,6 +104,7 @@ def profile(request, username):
 ```
 
 Lastly, let's create a `profile.html` template to show a single User and all of the Cats they have collected:
+(THIS PART IS DUPLICATED IN THE NEXT README)
 
 ```html
 {% extends 'base.html' %}
@@ -152,4 +153,4 @@ Let's also update our `index.html` page to allow us to inspect each user:
   </form>
 {% endblock %}
 ```
-## But wait! There's more! [How do we login?!](https://github.com/ladydangerdame/CatCollectr/blob/master/README4.md)
+## But wait! There's more! [How do we login?!](https://github.com/sixhops/catcollectr-lesson/blob/master/README4.md)

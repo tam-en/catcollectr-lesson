@@ -2,15 +2,15 @@
 
 To implement a user login system, we'll follow the pattern of URL, Form, View, then Template.
 
-In `urls.py` add the login route:
+In `main_app/urls.py` add the login route:
 
 ```python
 ...
-url(r'^login/$', views.login_view, name="login")
+path('login/', views.login_view, name="login")
 ...
 ```
 
-In `forms.py`, add a login form:
+In `main_app/forms.py`, add a login form:
 
 ```python
 class LoginForm(forms.Form):
@@ -18,15 +18,14 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput())
 ```
 
-Lets add the `login_view` function in `views.py`:
+Lets add the `login_view` function in `main_appviews.py`:
 
 ```python
 ...
+# Add LoginForm to this line...
+from .forms import CatForm, LoginForm
+# ...and add the following line...
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from .forms import Cat
-
-Form, LoginForm
 ...
 def login_view(request):
     if request.method == 'POST':
@@ -49,7 +48,7 @@ def login_view(request):
         return render(request, 'login.html', {'form': form})
 ```
 
-Finally, we'll add the `login.html` template:
+Finally, we'll add a new file for the `login.html` template:
 
 ```html
 {% extends 'base.html' %}
@@ -76,7 +75,7 @@ In `urls.py`:
 
 ```python
 ...
-url(r'^logout/$', views.logout_view, name="logout"),
+path('logout/', views.logout_view, name="logout"),
 ...
 ```
 
@@ -84,6 +83,7 @@ Create the corresponding `views.py` logout_view function:
 
 ```python
 ...
+# This line is already there
 from django.contrib.auth import authenticate, login, logout
 ...
 def logout_view(request):
@@ -96,32 +96,31 @@ Finally, lets add the log in and log out functionality to our website. Lets add 
 
 ```html
 {% if user.is_authenticated %}
-     <a  href="{% url 'profile' user.username %}">Hello, {{ user.username }}!</a> |
-     <a  href="{% url 'logout' %}">Logout</a>
- {% else %}
-     <a  href="{% url 'login' %}">Login</a>
- {% endif %}
+  <a  href="{% url 'profile' user.username %}">Hello, {{ user.username }}!</a> |
+  <a  href="{% url 'logout' %}">Logout</a>
+{% else %}
+  <a  href="{% url 'login' %}">Login</a>
+{% endif %}
 ```
 
 Awesome! Now we have login and logout functionality and the ability to see if you're currently logged in!
 
 # What about that Profile?
 
-We link to the 'profile' url from out username display, now we need that url and template! At this point your `urls.py` should look like this:
+We link to the 'profile' url from our username display, now we need that url, view, and template! At this point your `urls.py` should look like this:
 
 ```python
 urlpatterns = [
-    url(r'^user/(\w+)/$', views.profile, name='profile'),
-    url(r'^([0-9]+)/$', views.show, name="show"),
-    url(r'^post_url/$', views.post_cat, name="post_cat"),
-    url(r'^$', views.index),
-    url(r'^login/$', views.login_view, name="login"),
-    url(r'^logout/$', views.logout_view, name="logout"),
-
+    path('', views.index, name='index'),
+    path('<int:cat_id>/', views.show, name='show'),
+    path('post_url/', views.post_cat, name='post_cat'),
+    path('user/<username>/', views.profile, name='profile'),
+    path('login/', views.login_view, name="login"),
+    path('logout/', views.logout_view, name="logout"),
 ]
 ```
 
-Next is the view! Remember a good pattern is url, form (if needed), view, then template. So! In `views.py`:
+Next is the view! Remember a good pattern is url, form (if needed), view, then template. This should already be in your `views.py` file:
 
 ```python
 def profile(request, username):
@@ -130,7 +129,7 @@ def profile(request, username):
     return render(request, 'profile.html', {'username': username, 'cats': cats})
 ```
 
-Then create the template `profile.html`:
+Then create the template `profile.html` (already done in part 3) This adds code to it:
 
 ```html
 {% extends 'base.html' %}
@@ -142,14 +141,14 @@ Then create the template `profile.html`:
 
 <hr/>
 {% for cat in cats %}
-<a href="/{{cat.id}}">
-<p>Name: {{ cat.name }}</p>
-{% if cat.age > 0 %}
-<p>Age: {{ cat.age }}</p>
-{% else %}
-<p>Age: Kitten</p>
-{% endif %}
-</a>
+  <a href="/{{cat.id}}">
+    <p>Name: {{ cat.name }}</p>
+    {% if cat.age > 0 %}
+      <p>Age: {{ cat.age }}</p>
+    {% else %}
+      <p>Age: Kitten</p>
+    {% endif %}
+  </a>
 <hr/>
 {% endfor %}
 
@@ -160,7 +159,7 @@ Then create the template `profile.html`:
 
 Lets add some fun to our site! Lets allow users to like cats!
 
-We will use the URL -> View -> Template pattern to implement this addition, but with an extra step of implementing some AJAX (Hello, Darkness, my old friend) and include a like field to our Cat model.
+We will use the URL -> View -> Template pattern to implement this addition, but with an extra step of implementing some AJAX and include a like field to our Cat model.
 
 Lets start with the model. Update our `models.py` to include a likes field:
 
@@ -180,10 +179,10 @@ We will then make then run a migration to make this change reflect in our databa
 Now we can create a like button in our `index.html` page. Place this inside our `cats` iterator:
 
 ```html
+<!-- Below the last endif and above the hr -->
 <a class="waves-effect waves-light btn" data-id="{{cat.id}}">
   Likes: {% if cat.likes > 0 %} {{ cat.likes }} {% else %} None :( {% endif %}
 </a>
-
 ```
 
 Let's also grab the latest version of JQuery CDN and link it in our `base.html` as well as add a `js` folder in main_app's `static` folder and create a `app.js` file inside our new `js` folder. That's where we'll put our AJAX!
@@ -211,7 +210,6 @@ In `app.js` lets create a button listener:
       url: '/like_cat/',
       method: 'GET',
       data: {cat_id: element.attr('data-id')},
-
     })
   })
 ```
@@ -219,7 +217,7 @@ In `app.js` lets create a button listener:
 We will now create a url path in `urls.py` for our like button:
 
 ```python
-url(r'^like_cat/$', views.like_cat, name='like_cat')
+path('like_cat/', views.like_cat, name='like_cat')
 ```
 
 Now we can update our `views.py` to execute a function that will update our like count:
