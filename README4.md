@@ -185,7 +185,7 @@ Now we can create a like button in our `index.html` page. Place this inside our 
 </a>
 ```
 
-Let's also grab the latest version of JQuery CDN and link it in our `base.html` as well as add a `js` folder in main_app's `static` folder and create a `app.js` file inside our new `js` folder. That's where we'll put our AJAX!
+Let's also grab the latest version of JQuery CDN and link it in our `base.html` as well as add an `app.js` file inside our `static` folder. That's where we'll put our AJAX!
 
 We will include our javascript files **below** our html in `base.html`:
 
@@ -203,7 +203,7 @@ We will include our javascript files **below** our html in `base.html`:
 In `app.js` lets create a button listener:
 
 ```javascript
-  $('btn').on('click', function(event){
+  $('.btn').on('click', function(event){
     event.preventDefault();
     var element = $(this);
     $.ajax({
@@ -239,7 +239,7 @@ def like_cat(request):
 Update our button listener to handle a successful return of the like quantity:
 
 ```javascript
-$('btn').on('click', function(event){
+$('.btn').on('click', function(event){
   event.preventDefault();
   var element = $(this);
   $.ajax({

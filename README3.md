@@ -86,7 +86,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:cat_id>/', views.show, name='show'),
     path('post_url/', views.post_cat, name='post_cat'),
-    path('user/<char:username>/', views.profile, name='profile'), # this line is new
+    path('user/<username>/', views.profile, name='profile'), # this line is new
 ]
 ...
 ```
