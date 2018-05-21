@@ -230,4 +230,4 @@ Now check out your `index.html` page! We can now create new Cats!
 				cat.save()
 	    return HttpResponseRedirect('/')
 	```
-## Moving on! [Let's add some Crazy Cat People! Or uh... Users](https://github.com/sixhops/catcollectr-lesson/blob/master/README3.md)
+## Moving on! [Let's add some Crazy Cat People! Or uh... Users](blob/master/README3.md)
