@@ -383,4 +383,4 @@ python3 manage.py changepassword <user_name>
 8.  Now when we go back to our admin page, we'll see a link to our Cat model.  We can add, update, and remove Cat models at our leisure from this section.  Neat!
 
 
-## Next up! [Django! Part 2!](blob/master/README2.md)
+## Next up! [Django! Part 2!](/README2.md)
