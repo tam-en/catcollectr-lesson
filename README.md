@@ -71,32 +71,31 @@
 
 	Now head to the `/` root route and you should see our greeting! Sweet!
 
-7.  To keep our routes clean and separated in an orderly fashion, we will now separate our routes into their respective separate `apps` away from the main url dispatcher in `catcollectr`. We will set up our URLs for the `main_app` to be included
+7. To keep our routes clean and separated in an orderly fashion, we will now separate our routes into their respective separate `apps` away from the main url dispatcher in `catcollectr`. We will set up our URLs for the `main_app` to be included
 
+   ```python
+   # catcollectr/catcollectr/urls.py
+   from django.urls import include, path
+   from django.contrib import admin
+   
+   urlpatterns = [
+   	path('admin/', admin.site.urls),
+   	# Change the line below...
+   	path('', include('main_app.urls'))
+   ]
+   ```
 
-	```python
-	# catcollectr/catcollectr/urls.py
-	from django.urls import include, path
-	from django.contrib import admin
+   Make a `urls.py` file inside `main_app` and we'll declare our URLs for this app in here. We will directly import our view functions from the view file:
 
-	urlpatterns = [
-		path('admin/', admin.site.urls),
-		# Change the line below...
-		path('', include('main_app.urls'))
-	]
-	```
-
-	Make a `urls.py` file inside `main_app` and we'll declare our URLs for this app in here. We will directly import our view functions from the view file:
-
-	```python
-	# main_app/urls.py
-	from django.conf.urls import path
-	from . import views
-
-	urlpatterns = [
-    	path('', views.index, name='index'),
-	]
-	```
+   ```python
+   # main_app/urls.py
+   from django.urls import path
+   from . import views
+   
+   urlpatterns = [
+   	path('', views.index, name='index'),
+   ]
+   ```
 
 # Lets start showing data!
 
